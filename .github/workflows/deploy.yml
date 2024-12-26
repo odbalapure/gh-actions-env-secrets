@@ -4,8 +4,15 @@ on:
     branches:
       - master
       - dev
+env:
+  MONGO_DB_NAME: gha-demo
 jobs:
   test:
+    env:
+      MONGODB_CLUSTER_ADDRESS: nodejsprojects.9b6xe.mongodb.net
+      MONGODB_USERNAME: ombalapure7
+      MONGODB_PASSWORD: Mongodb@231996
+      PORT: 8080
     environment: testing
     runs-on: ubuntu-latest
     steps:
@@ -19,11 +26,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Run server
-        run: npm start & npx wait-on http://127.0.0.1:XYZ
+        run: npm start & npx wait-on http://127.0.0.1:${{ env.PORT }}
       - name: Run tests
         run: npm test
       - name: Output information
-        run: echo "..."
+        run: "echo 'USERNAME: ${{ env.MONGODB_USERNAME }}'"
+        # run: 'echo "USERNAME: $MONGODB_USERNAME"'
   deploy:
     needs: test
     runs-on: ubuntu-latest
